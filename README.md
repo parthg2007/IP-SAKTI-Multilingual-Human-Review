@@ -9,7 +9,7 @@ IP-SAKTI Sahayak is a multilingual, Retrieval-Augmented Generation (RAG)-based A
 | Field | Details |
 | --- | --- |
 | Problem Statement ID | SIH26045 |
-| Problem Statement | IP-SAKTI Sahayak - a multilingual, RAG-based, source-cited AI assistant |
+| Problem Statement | IP-SAKTI Sahayak - RAG-based, source-cited AI assistant |
 | Theme | MedTech / BioTech / HealthTech |
 | Category | Software |
 | Team | Hallucinators |
@@ -45,9 +45,9 @@ IP-SAKTI Sahayak provides a multilingual research interface that classifies each
 | Backend | Python, FastAPI, Uvicorn, Pydantic |
 | Retrieval and ML | Dual RAG, scikit-learn, NumPy, hybrid BM25/vector retrieval |
 | Data | SQLite-backed vector/chunk stores, JSONL/CSV evidence corpus |
-| AI and language services | Groq LLM, optional BHASHINI translation, optional Deepgram transcription |
+| AI and language services | Groq LLM, BHASHINI translation |
 | Testing | pytest plus frontend contract and interaction tests |
-| Deployment | Docker and Render |
+| Deployment | Render |
 
 ## Architecture
 
@@ -142,21 +142,6 @@ Then open:
 - Frontend: `http://localhost:5173`
 - API documentation: `http://127.0.0.1:8000/docs`
 
-### Optional integrations
-
-To enable BHASHINI translation, configure the following values in `backend/.env`:
-
-```env
-BHASHINI_ENABLED=true
-BHASHINI_USER_ID=your_user_id
-BHASHINI_API_KEY=your_api_key
-BHASHINI_PIPELINE_ID=your_pipeline_id
-```
-
-Use `IP_FACILITATOR_EMAIL` to display the contact for human-review escalation. Configure `DEEPGRAM_API_KEY` only when Deepgram transcription fallback is required.
-
-Never commit `.env` files, API keys, tokens, or other credentials.
-
 ## Testing
 
 Run all test suites:
@@ -181,8 +166,6 @@ npm run build
 cd backend
 python3 run.py
 ```
-
-For Render deployment, use the root `render.yaml` Blueprint and Dockerfile. Store every API key as a Render secret. The production service exposes the frontend, API routes, and static assets from one service.
 
 ## Evidence Sources
 
