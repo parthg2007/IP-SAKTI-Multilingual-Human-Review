@@ -35,7 +35,7 @@ IP-SAKTI Sahayak provides a multilingual research interface that classifies each
 - Confidence scoring and human IP-facilitator escalation for low-confidence responses
 - Research tools for IP classification and Access and Benefit Sharing (ABS) support
 - Saved workspace and chat history
-- Optional voice interaction support
+- voice interaction support
 
 ## Technology Stack
 
