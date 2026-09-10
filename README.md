@@ -9,7 +9,7 @@ IP-SAKTI Sahayak is a multilingual, Retrieval-Augmented Generation (RAG)-based A
 | Field | Details |
 | --- | --- |
 | Problem Statement ID | SIH26045 |
-| Problem Statement | IP-SAKTI Sahayak - a multilingual, RAG-based, source-cited AI assistant |
+| Problem Statement | IP-SAKTI Sahayak - RAG-based, source-cited AI assistant |
 | Theme | MedTech / BioTech / HealthTech |
 | Category | Software |
 | Team | Hallucinators |
@@ -35,7 +35,7 @@ IP-SAKTI Sahayak provides a multilingual research interface that classifies each
 - Confidence scoring and human IP-facilitator escalation for low-confidence responses
 - Research tools for IP classification and Access and Benefit Sharing (ABS) support
 - Saved workspace and chat history
-- Optional voice interaction support
+- voice interaction support
 
 ## Technology Stack
 
@@ -90,7 +90,6 @@ YOUR-SIH-PROJECT/
 │   ├── PRESENTATION.md              # Final presentation or accessible viewer link
 │   └── DEMO.md                      # Demo video link and walkthrough
 ├── src/
-  │---IP-SAKTI-Multilingual-Human-Review/
       ├── backend/
       │   ├── app/
       │   │   ├── main.py                 # FastAPI application
@@ -117,7 +116,6 @@ YOUR-SIH-PROJECT/
   └── LICENSE
 ```
 
-> Keep all application code under `src/`. Do not place source code in `docs/`, `assets/`, `submission/`, or the repository root. If the project grows, create subfolders inside `src/`, such as `src/rag/`, `src/services/`, `src/models/`, and `src/utils/`.
 
 ## Getting Started
 
@@ -159,20 +157,6 @@ Then open:
 - API documentation: `http://127.0.0.1:8000/docs`
 - Application: `http://127.0.0.1:8000`
 
-### Optional integrations
-
-To enable BHASHINI translation, configure the following values in `.env`:
-
-```env
-BHASHINI_ENABLED=true
-BHASHINI_USER_ID=your_user_id
-BHASHINI_API_KEY=your_api_key
-BHASHINI_PIPELINE_ID=your_pipeline_id
-```
-
-Use `IP_FACILITATOR_EMAIL` to display the contact for human-review escalation. Configure `DEEPGRAM_API_KEY` only when Deepgram transcription fallback is required.
-
-Never commit `.env` files, API keys, tokens, or other credentials.
 
 ## Testing
 
