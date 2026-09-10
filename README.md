@@ -1,102 +1,220 @@
-# 🌿 SIH-Project: IP-SAKTI Full-Stack Platform
+# IP-SAKTI Sahayak
 
-An AI-powered intelligence platform uniting **Ayurveda & Traditional Knowledge** with **Authoritative Intellectual Property & Statutory Law**.
+> **Where Traditional Knowledge Meets Its Rightful Protection**
 
----
+IP-SAKTI Sahayak is a multilingual, Retrieval-Augmented Generation (RAG)-based AI assistant that helps users explore Ayurveda, traditional-knowledge, intellectual-property, and regulatory questions using source-cited evidence. It is designed to provide traceable, jurisdiction-aware information rather than unsupported chatbot responses.
 
-## 📁 Repository Structure
+## Project Information
 
+| Field | Details |
+| --- | --- |
+| Problem Statement ID | SIH26045 |
+| Problem Statement | IP-SAKTI Sahayak - a multilingual, RAG-based, source-cited AI assistant |
+| Theme | MedTech / BioTech / HealthTech |
+| Category | Software |
+| Team | Hallucinators |
+
+## Problem Statement
+
+Ayurvedic practitioners, researchers, startups, and traditional-knowledge holders often need to navigate complex intellectual-property and regulatory requirements. Relevant information is distributed across statutes, treaties, registry records, and traditional-knowledge sources. A general-purpose chatbot can conflate jurisdictions, generate unverifiable statements, or omit the legal sources needed for review.
+
+## Proposed Solution
+
+IP-SAKTI Sahayak provides a multilingual research interface that classifies each query and retrieves evidence from the appropriate knowledge sources before generating a structured, citation-bound response. It separates Indian and international legal contexts, ranks evidence by authority, shows sources, and can route low-confidence cases for human IP-facilitator review.
+
+> **Important:** IP-SAKTI Sahayak is an information and research-support tool. Its responses are not legal advice. Users should consult a qualified professional for decisions involving legal rights, filings, or regulatory compliance.
+
+## Key Features
+
+- Multilingual query and answer support, with optional BHASHINI translation integration
+- Dual-RAG retrieval for Ayurveda/traditional-knowledge content and legal/regulatory evidence
+- Query routing for conceptual, legal, and hybrid questions
+- India and international jurisdiction selection to avoid cross-jurisdiction conflation
+- Source-cited answers with deterministic source markers and clickable source cards when public links are available
+- Citation ranking, evidence deduplication, conflict detection, and corpus versioning
+- Confidence scoring and human IP-facilitator escalation for low-confidence responses
+- Research tools for IP classification and Access and Benefit Sharing (ABS) support
+- Saved workspace and chat history
+- Optional voice interaction support
+
+## Technology Stack
+
+| Layer | Technologies |
+| --- | --- |
+| Frontend | React 19, Vite, Tailwind CSS, JavaScript |
+| Backend | Python, FastAPI, Uvicorn, Pydantic |
+| Retrieval and ML | Dual RAG, scikit-learn, NumPy, hybrid BM25/vector retrieval |
+| Data | SQLite-backed vector/chunk stores, JSONL/CSV evidence corpus |
+| AI and language services | Groq LLM, optional BHASHINI translation, optional Deepgram transcription |
+| Testing | pytest plus frontend contract and interaction tests |
+| Deployment | Docker and Render |
+
+## Architecture
+
+```text
+User
+  |
+  v
+React + Vite multilingual interface
+  |
+  v
+FastAPI API Gateway
+  |
+  v
+Orchestrator Service
+  |
+  +--> Query Router (conceptual / legal / hybrid)
+  |       |
+  |       +--> RAG 1: Ayurveda and traditional-knowledge retrieval
+  |       |
+  |       +--> RAG 2: Legal and regulatory evidence retrieval
+  |
+  +--> Citation ranking, conflict detection, and evidence fusion
+  |
+  v
+Groq LLM guardrailed synthesis
+  |
+  v
+Source-cited response + confidence score + optional human escalation
 ```
-SIH-Project/
-├── backend/                       # FastAPI + Multi-RAG Orchestrator
-│   ├── app/                       # Microservices, RAG 1, RAG 2, and Orchestrator
-│   ├── tests/                     # Unit, integration & contract tests
-│   ├── agent.md                   # Authoritative AI Generation Specification
-│   ├── vector.db                  # RAG 1 Vector Database
-│   ├── vector_rag2.db             # RAG 2 Statutory Vector Database (2,527 chunks)
-│   ├── .env                       # Backend Environment & Groq API configuration
-│   └── run.py                     # Standalone FastAPI Entrypoint
-├── frontend/                      # React 19 + Vite + TailwindCSS Chat Application
-│   ├── src/                       # UI components, pages (Landing, Chat), hooks
-│   ├── dist/                      # Pre-built production bundle
-│   ├── tests/                     # Client contract & interaction tests
-│   ├── .env                       # Frontend proxy target (http://127.0.0.1:8000)
-│   └── package.json               # Frontend dependencies & scripts
-├── package.json                   # Root Full-Stack Gateway
-├── run-dev.js                     # Unified concurrent runner
-├── start.sh                       # Quick bash launch script
-└── README.md                      # Platform overview and instructions
+
+The application keeps the RAG 1 and RAG 2 stores separate (`vector.db` and `vector_rag2.db`). The legal corpus preserves source metadata and is versioned to support traceability.
+
+## Repository Structure
+
+```text
+IP-SAKTI-Multilingual-Human-Review/
+├── backend/
+│   ├── app/
+│   │   ├── main.py                 # FastAPI application
+│   │   ├── orchestrator/           # Routing, synthesis, human-review and voice flows
+│   │   ├── rag2/                   # Legal/regulatory RAG, versioning and conflict detection
+│   │   └── data/                   # Data models, storage and ingestion
+│   ├── frontend/                   # React + Vite client application
+│   ├── tests/                      # Backend, integration and contract tests
+│   ├── requirements.txt
+│   └── run.py
+├── frontend/                       # Root frontend configuration/build assets
+├── Dockerfile
+├── render.yaml
+├── run-dev.js                      # Unified development runner
+├── start.sh
+└── package.json
 ```
 
----
+## Getting Started
 
-## 🚀 How to Run the Website
+### Prerequisites
 
-### Method 1: Single-Command Gateway (Recommended)
-Simply navigate to the project root and run:
+- Node.js and npm
+- Python 3.10 or later
+- A Groq API key for LLM-powered synthesis
+
+### Install and run locally
+
 ```bash
-cd SIH-Project
+git clone <YOUR_REPOSITORY_URL>
+cd IP-SAKTI-Multilingual-Human-Review
+npm install
+```
+
+Create the backend environment and install development dependencies:
+
+```bash
+python -m venv backend/.venv
+node run-python.js -m pip install -r backend/requirements-dev.txt
+```
+
+Create `backend/.env` and add the required server-side settings:
+
+```env
+GROQ_API_KEY=your_groq_api_key
+```
+
+Start the frontend and backend together:
+
+```bash
 npm run dev
 ```
-> This starts both:
-> - **Backend API** at `http://127.0.0.1:8000` (Swagger docs at `/docs`)
-> - **Frontend UI** at `http://localhost:5173` (with hot-reload and automatic `/api` proxy)
-> 
-> Press **Ctrl+C** to cleanly shut down both servers.
 
-### Alternative: Bash Script
-```bash
-./start.sh
+Then open:
+
+- Frontend: `http://localhost:5173`
+- API documentation: `http://127.0.0.1:8000/docs`
+
+### Optional integrations
+
+To enable BHASHINI translation, configure the following values in `backend/.env`:
+
+```env
+BHASHINI_ENABLED=true
+BHASHINI_USER_ID=your_user_id
+BHASHINI_API_KEY=your_api_key
+BHASHINI_PIPELINE_ID=your_pipeline_id
 ```
 
----
+Use `IP_FACILITATOR_EMAIL` to display the contact for human-review escalation. Configure `DEEPGRAM_API_KEY` only when Deepgram transcription fallback is required.
 
-## 🧪 Testing
+Never commit `.env` files, API keys, tokens, or other credentials.
 
-Run both test suites with one command:
+## Testing
+
+Run all test suites:
+
 ```bash
 npm test
 ```
-Or individually:
-- **Backend Tests** (pytest): `npm run test:backend`
-- **Frontend Tests** (contracts + React interactions): `npm run test:frontend`
 
----
+Run a specific suite:
 
-## 🏗️ Production Build & Standalone Mode
+```bash
+npm run test:backend
+npm run test:frontend
+```
 
-To build the frontend and serve everything through FastAPI on a single port (8000):
+## Production Build and Deployment
+
+Build the frontend and serve the application through FastAPI:
+
 ```bash
 npm run build
-cd backend && python3 run.py
+cd backend
+python3 run.py
 ```
-Then open `http://127.0.0.1:8000` in any browser.
 
-## Multilingual, citations, confidence & human review
+For Render deployment, use the root `render.yaml` Blueprint and Dockerfile. Store every API key as a Render secret. The production service exposes the frontend, API routes, and static assets from one service.
 
-IP-SAKTI supports a multilingual response selector for major Indian languages. When BHASHINI credentials are configured, the backend translates non-English input to English for the English-heavy RAG corpus and translates the generated answer back to the selected language. BHASHINI uses a pipeline-config call followed by a pipeline-compute call, matching the official ULCA/BHASHINI integration flow.
+## Evidence Sources
 
-Configure `BHASHINI_USER_ID`, `BHASHINI_API_KEY`, and `BHASHINI_PIPELINE_ID` in `backend/.env`. Keep credentials server-side; never place them in the frontend. Without BHASHINI credentials, the LLM still responds in the requested language where supported.
+The project is designed around curated traditional-knowledge, IP, and regulatory evidence, including:
 
-Every retrieved source is assigned a deterministic `[S1]`, `[S2]`, ... marker. The answer includes a Sources section, while the UI exposes clickable source cards when a public URL is available.
+- The Patents Act, 1970 and Patent Rules (India Code)
+- The Biological Diversity Act, 2002 and National Biodiversity Authority guidance
+- Traditional Knowledge Digital Library (TKDL) and CSIR prior-art material
+- Drugs and Cosmetics Act, 1940 and AYUSH licensing rules
+- FSSAI Ayurveda Aahara Regulations
+- WIPO materials on intellectual property, genetic resources, and associated traditional knowledge
 
-Each answer receives a confidence score derived from routing confidence and retrieval evidence quality. Low-confidence answers and legal answers below the higher confidence threshold expose a human IP facilitator escalation path. Submissions are persisted to `backend/data/escalations.jsonl`; set `IP_FACILITATOR_EMAIL` to show the configured facilitator contact in the UI.
+## Impact and Benefits
 
-## Complete frontend integration
+IP-SAKTI Sahayak aims to make trustworthy IP and regulatory information more accessible for Ayurvedic vaidyas, traditional healers, AYUSH researchers, startups, IP professionals, regulators, and indigenous communities. By grounding answers in cited evidence and separating jurisdictions, it supports more informed research while helping reduce the risk of misinformation and biopiracy.
 
-See [frontend/README.md](frontend/README.md) for the Research tools panel, answer settings, voice setup, human review, API configuration and verification instructions.
+## Future Scope
 
-On Windows or Unix, prepare the backend environment with `python -m venv backend/.venv` and `node run-python.js -m pip install -r requirements-dev.txt`. Then use `npm run dev`; `npm test` includes both unittest-style and pytest-style backend tests.
+- Expand multilingual and voice coverage with language-specific legal terminology validation
+- Add knowledge-graph and agentic-reasoning capabilities
+- Introduce scheduled, human-curated legal-corpus updates
+- Integrate permission-based connectors for paid registry sources
+- Extend patent surveillance and prior-art research workflows
+- Enhance human-review workflows and institutional dashboards
 
-## Deploy to Render
+## Security and Responsible Use
 
-This repository deploys as one Render Docker web service. The root `render.yaml` is the Blueprint and the root `Dockerfile` builds the React bundle and runs FastAPI; keep `frontend/` and `backend/` at the repository root.
+- Do not commit passwords, access tokens, API keys, or `.env` files.
+- Keep third-party credentials server-side; never expose them in the frontend.
+- Use official and authoritative sources wherever possible.
+- Treat generated content as research assistance and verify it before legal, regulatory, or commercial action.
 
-1. Push the repository to GitHub or GitLab, then create a Render **Blueprint** from that repository. Render will read `render.yaml` from the root.
-2. Use the generated `ip-sakti` web service. Render builds the root multi-stage `Dockerfile`: the first stage compiles React, and the second installs `backend/requirements.txt`, builds both vector databases, and runs FastAPI on Render's `$PORT`.
-3. Enter `GROQ_API_KEY` as a secret. Enter `DEEPGRAM_API_KEY` only if Deepgram fallback transcription is needed. To enable BHASHINI, set `BHASHINI_ENABLED=true` and provide the three BHASHINI secrets (`BHASHINI_USER_ID`, `BHASHINI_API_KEY`, and `BHASHINI_PIPELINE_ID`). Never put these values in `frontend/.env`.
-4. Keep `USE_LOCAL_RAG2=true` and `ENABLE_MOCK_RAG2=false` for the bundled legal corpus. Set `RAG2_HTTP_URL` only when connecting a separate compatible RAG 2 service.
-5. The Blueprint attaches a 1 GB persistent disk at `/var/data` and stores human-review cases at `/var/data/escalations.jsonl`. This requires a paid Render web-service plan; Render service files are otherwise ephemeral. If you deliberately deploy on a free plan, remove the `disk` block and `ESCALATION_STORE_PATH` from `render.yaml`, understanding that review cases will be lost on restart.
-6. Wait for the health check at `/api/v1/rag/knowledge/health` to pass, then open `https://<your-service>.onrender.com/chat`. `/`, `/chat`, `/assets/*`, `/animations/*`, and all `/api/*` routes are served by the same service.
+## License
 
-The service is intentionally a single web service because FastAPI serves the production React bundle. A separate Render Static Site would need a separate public API origin and CORS/Vite configuration.
+This project is distributed under the license included in the repository. See [LICENSE](LICENSE) for details.
