@@ -9,7 +9,7 @@ IP-SAKTI Sahayak is a multilingual, Retrieval-Augmented Generation (RAG)-based A
 | Field | Details |
 | --- | --- |
 | Problem Statement ID | SIH26045 |
-| Problem Statement | IP-SAKTI Sahayak - RAG-based, source-cited AI assistant |
+| Problem Statement | IP-SAKTI Sahayak - a multilingual, RAG-based, source-cited AI assistant |
 | Theme | MedTech / BioTech / HealthTech |
 | Category | Software |
 | Team | Hallucinators |
@@ -35,7 +35,7 @@ IP-SAKTI Sahayak provides a multilingual research interface that classifies each
 - Confidence scoring and human IP-facilitator escalation for low-confidence responses
 - Research tools for IP classification and Access and Benefit Sharing (ABS) support
 - Saved workspace and chat history
-- voice interaction support
+- Optional voice interaction support
 
 ## Technology Stack
 
@@ -45,9 +45,9 @@ IP-SAKTI Sahayak provides a multilingual research interface that classifies each
 | Backend | Python, FastAPI, Uvicorn, Pydantic |
 | Retrieval and ML | Dual RAG, scikit-learn, NumPy, hybrid BM25/vector retrieval |
 | Data | SQLite-backed vector/chunk stores, JSONL/CSV evidence corpus |
-| AI and language services | Groq LLM, BHASHINI translation |
+| AI and language services | Groq LLM, optional BHASHINI translation, optional Deepgram transcription |
 | Testing | pytest plus frontend contract and interaction tests |
-| Deployment | Render |
+| Deployment | Docker and Render |
 
 ## Architecture
 
@@ -83,30 +83,46 @@ The application keeps the RAG 1 and RAG 2 stores separate (`vector.db` and `vect
 ## Repository Structure
 
 ```text
-IP-SAKTI-Multilingual-Human-Review/
-├── backend/
-│   ├── app/
-│   │   ├── main.py                 # FastAPI application
-│   │   ├── orchestrator/           # Routing, synthesis, human-review and voice flows
-│   │   ├── rag2/                   # Legal/regulatory RAG, versioning and conflict detection
-│   │   └── data/                   # Data models, storage and ingestion
-│   ├── frontend/                   # React + Vite client application
-│   ├── tests/                      # Backend, integration and contract tests
-│   ├── requirements.txt
-│   └── run.py
-├── frontend/                       # Root frontend configuration/build assets
-├── Dockerfile
-├── render.yaml
-├── run-dev.js                      # Unified development runner
-├── start.sh
-└── package.json
+YOUR-SIH-PROJECT/
+├── README.md                       # Project overview and setup instructions
+├── SUBMISSION_GUIDE.md             # SIH submission checklist
+├── submission/
+│   ├── PRESENTATION.md              # Final presentation or accessible viewer link
+│   └── DEMO.md                      # Demo video link and walkthrough
+├── src/
+  │---IP-SAKTI-Multilingual-Human-Review/
+      ├── backend/
+      │   ├── app/
+      │   │   ├── main.py                 # FastAPI application
+      │   │   ├── orchestrator/           # Routing, synthesis, human-review and voice flows
+      │   │   ├── rag2/                   # Legal/regulatory RAG, versioning and conflict detection
+      │   │   └── data/                   # Data models, storage and ingestion
+      │   ├── frontend/                   # React + Vite client application
+      │   ├── tests/                      # Backend, integration and contract tests
+      │   ├── requirements.txt
+      │   └── run.py
+      ├── frontend/                       # Root frontend configuration/build assets
+      ├── Dockerfile
+      ├── render.yaml
+      ├── run-dev.js                      # Unified development runner
+      ├── start.sh
+      └── package.json                      # All project source code starts here
+  ├── docs/
+  │   └── architecture.md              # Technical architecture documentation
+  ├── assets/
+  │   └── screenshots/
+  │       └── README.md                # Screenshot naming and upload guidance
+  ├── requirements.txt                 # Python dependencies
+  ├── .gitignore                       # Ignored files and secrets
+  └── LICENSE
 ```
+
+> Keep all application code under `src/`. Do not place source code in `docs/`, `assets/`, `submission/`, or the repository root. If the project grows, create subfolders inside `src/`, such as `src/rag/`, `src/services/`, `src/models/`, and `src/utils/`.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js and npm
 - Python 3.10 or later
 - A Groq API key for LLM-powered synthesis
 
@@ -114,58 +130,63 @@ IP-SAKTI-Multilingual-Human-Review/
 
 ```bash
 git clone <YOUR_REPOSITORY_URL>
-cd IP-SAKTI-Multilingual-Human-Review
-npm install
+cd <YOUR_PROJECT_FOLDER>
+python -m venv .venv
 ```
 
-Create the backend environment and install development dependencies:
+Activate the environment and install dependencies:
 
 ```bash
-python -m venv backend/.venv
-node run-python.js -m pip install -r backend/requirements-dev.txt
+source .venv/bin/activate        # macOS/Linux
+# .venv\Scripts\activate         # Windows PowerShell
+pip install -r requirements.txt
 ```
 
-Create `backend/.env` and add the required server-side settings:
+Create a `.env` file and add required server-side settings:
 
 ```env
 GROQ_API_KEY=your_groq_api_key
 ```
 
-Start the frontend and backend together:
+Run the application:
 
 ```bash
-npm run dev
+uvicorn src.main:app --reload
 ```
 
 Then open:
 
-- Frontend: `http://localhost:5173`
 - API documentation: `http://127.0.0.1:8000/docs`
+- Application: `http://127.0.0.1:8000`
+
+### Optional integrations
+
+To enable BHASHINI translation, configure the following values in `.env`:
+
+```env
+BHASHINI_ENABLED=true
+BHASHINI_USER_ID=your_user_id
+BHASHINI_API_KEY=your_api_key
+BHASHINI_PIPELINE_ID=your_pipeline_id
+```
+
+Use `IP_FACILITATOR_EMAIL` to display the contact for human-review escalation. Configure `DEEPGRAM_API_KEY` only when Deepgram transcription fallback is required.
+
+Never commit `.env` files, API keys, tokens, or other credentials.
 
 ## Testing
 
-Run all test suites:
+Run the project's test suite after adding tests under `src/` or a `tests/` directory:
 
 ```bash
-npm test
-```
-
-Run a specific suite:
-
-```bash
-npm run test:backend
-npm run test:frontend
+pytest
 ```
 
 ## Production Build and Deployment
 
-Build the frontend and serve the application through FastAPI:
+Build a production-ready container or deploy the FastAPI application to the selected cloud provider. Keep Docker, cloud configuration, and deployment documentation outside `src/`; the application code itself remains under `src/`.
 
-```bash
-npm run build
-cd backend
-python3 run.py
-```
+Store every API key as a deployment secret, never in the repository.
 
 ## Evidence Sources
 
