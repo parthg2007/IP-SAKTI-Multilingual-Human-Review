@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: ip-sakti
+    runtime: docker
+    region: singapore
+    plan: 1c-2g
+    rootDir: .
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/rag/knowledge/health
+    maxShutdownDelaySeconds: 60
+    disk:
+      name: ip-sakti-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: USE_LOCAL_RAG2
+        value: "true"
+      - key: ENABLE_MOCK_RAG2
+        value: "false"
+      - key: VECTOR_DB_PATH
+        value: "./vector.db"
+      - key: GROQ_MODEL
+        value: "qwen/qwen3.8-27b"
+      - key: GROQ_WHISPER_MODEL
+        value: "whisper-large-v3-turbo"
+      - key: GROQ_MAX_TOKENS
+        value: "900"
+      - key: ESCALATION_STORE_PATH
+        value: /var/data/escalations.jsonl
+      - key: HUMAN_ESCALATION_ENABLED
+        value: "true"
+      - key: GROQ_API_KEY
+        sync: false
+      - key: DEEPGRAM_API_KEY
+        sync: false
+      - key: BHASHINI_ENABLED
+        value: "false"
+      - key: BHASHINI_USER_ID
+        sync: false
+      - key: BHASHINI_API_KEY
+        sync: false
+      - key: BHASHINI_PIPELINE_ID
+        sync: false

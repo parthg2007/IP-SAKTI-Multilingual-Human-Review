@@ -1,0 +1,7 @@
+source_name,source_url,authority_tier,note
+TKDL,http://www.tkdl.res.in/tkdl/langdefault/common/SourceInfo.asp?GL=Eng,auxiliary_seed,Auxiliary domain-context seed from the supplied SIH corpus package. Do not use alone for final legal conclusions.
+India Code,https://indiacode.nic.in,auxiliary_seed,Auxiliary domain-context seed from the supplied SIH corpus package. Do not use alone for final legal conclusions.
+IP India,https://ipindia.gov.in,auxiliary_seed,Auxiliary domain-context seed from the supplied SIH corpus package. Do not use alone for final legal conclusions.
+National Biodiversity Authority (NBA),https://nbaindia.nic.in,auxiliary_seed,Auxiliary domain-context seed from the supplied SIH corpus package. Do not use alone for final legal conclusions.
+Traditional Knowledge Digital Library (TKDL),http://www.tkdl.res.in/tkdl/langdefault/common/SourceInfo.asp?GL=Eng,auxiliary_seed,Auxiliary domain-context seed from the supplied SIH corpus package. Verify legal claims against RAG2 authoritative evidence.
+National Biodiversity Authority (NBA),https://www.nbaindia.nic.in/acts-and-rules/rules,auxiliary_seed,Auxiliary domain-context seed from the supplied SIH corpus package. Verify legal claims against RAG2 authoritative evidence.

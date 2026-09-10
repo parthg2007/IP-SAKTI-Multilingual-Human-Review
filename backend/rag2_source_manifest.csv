@@ -1,0 +1,18 @@
+category,domain,document_type,document_title,jurisdiction,source_url,authority_tier
+biodiversity_act,BIODIVERSITY_ABS,STATUTE,"Biological Diversity Act 2002, from FAOLEX (FAO's own UN legal database - avoids NBA's unreliable server)",INDIA,https://faolex.fao.org/docs/pdf/ind40698.pdf,source_document
+biodiversity_rules_2004,BIODIVERSITY_ABS,RULES,"Biological Diversity Rules 2004, from FAOLEX (avoids NBA's unreliable server)",INDIA,https://faolex.fao.org/docs/pdf/ind53983.pdf,source_document
+cbd,BIODIVERSITY,TREATY,Convention on Biological Diversity,INTERNATIONAL,https://www.cbd.int/doc/legal/cbd-en.pdf,source_document
+designs_act,DESIGN,STATUTE,"Designs Act 2000, from IP India directly (confirmed static text)",INDIA,https://ipindia.gov.in/the-designs-act-2000,source_document
+dmr_act,ADVERTISING_REGULATION,STATUTE,Drugs and Magic Remedies (Objectionable Advertisements) Act 1954 - VERIFY URL,INDIA,https://indiacode.gov.in/handle/123456789/2338,source_document
+dmr_act,ADVERTISING_REGULATION,STATUTE,"Drugs and Magic Remedies (Objectionable Advertisements) Act 1954, from Indian Kanoon (avoids SSL cert issue on drugscontrol.py.gov.in)",INDIA,https://indiankanoon.org/doc/1929849/,source_document
+drugs_cosmetics_act,AYUSH_DRUG_REGULATION,STATUTE/REGULATION,"Drugs and Cosmetics Act 1940 + Rules 1945 combined, from CDSCO (the actual drug regulator - includes Ayurvedic/Siddha/Unani drug provisions, directly relevant to this project)",INDIA,https://cdsco.gov.in/opencms/export/sites/CDSCO_WEB/Pdf-documents/acts_rules/2016DrugsandCosmeticsAct1940Rules1945.pdf,source_document
+drugs_cosmetics_act,AYUSH_DRUG_REGULATION,STATUTE/REGULATION,Drugs and Cosmetics Act 1940 - VERIFY URL,INDIA,https://indiacode.gov.in/handle/123456789/2312,source_document
+fssai_ayurveda_aahar,AYURVEDA_FOOD,REGULATION,"Food Safety and Standards (Ayurveda Aahara) Regulations 2022 - mirrored by APEDA (govt trade body) as a stable static PDF, since FSSAI's own server intermittently serves a JS shell instead of the file",INDIA,https://agriexchange.apeda.gov.in/ImportRegulations/Indias%20FSSAI%20Notifies%20Final%20Standards%20for%20Ayurveda%20FoodsNew%20DelhiIndiaIN20220054.pdf,source_document
+gi_act,GEOGRAPHICAL_INDICATION,STATUTE,"GI of Goods (Registration and Protection) Act 1999, from Indian Kanoon (static full text)",INDIA,https://indiankanoon.org/doc/1463915/,source_document
+nagoya_protocol,ABS,TREATY,Nagoya Protocol,INTERNATIONAL,https://www.cbd.int/abs/doc/protocol/nagoya-protocol-en.pdf,source_document
+nba_abs_guidelines,BIODIVERSITY_ABS,GUIDELINES,"Guidelines on Access to Biological Resources and Associated Knowledge and Benefits Sharing Regulations 2014, from FAOLEX (avoids NBA's unreliable server)",INDIA,https://faolex.fao.org/docs/pdf/ind188691.pdf,source_document
+patents_act,PATENT,STATUTE,"Patents Act 1970, consolidated to 1-08-2024, from IP India (authoritative)",INDIA,https://ipindia.gov.in/frontend/pdf/patents/1_113_1_The_Patents_Act__1970___incorporating_all_amendments_till_1-08-2024.pdf,source_document
+ppvfr_act,PLANT_VARIETY,STATUTE,"PPV&FR Act 2001, from Indian Kanoon (static full text)",INDIA,https://indiankanoon.org/doc/1186622/,source_document
+trademarks_act,TRADEMARK,STATUTE,"Trade Marks Act 1999, from IP India directly (confirmed static text)",INDIA,https://ipindia.gov.in/tm-act-1999,source_document
+trips,IP_TREATY,TREATY,TRIPS Agreement full text,INTERNATIONAL,https://www.wto.org/english/docs_e/legal_e/27-trips.pdf,source_document
+wipo_gratk,GENETIC_RESOURCES_TK,TREATY,"WIPO Treaty on IP, Genetic Resources and TK, official diplomatic conference text (GRATK/DC/7), adopted 24 May 2024 - stable non-expiring PDF",INTERNATIONAL,https://www.wipo.int/edocs/mdocs/tk/en/gratk_dc/gratk_dc_7.pdf,source_document

@@ -1,0 +1,18 @@
+{
+  "name": "sih-project",
+  "version": "1.0.0",
+  "private": true,
+  "description": "IP-SAKTI Full-Stack Platform: Ayurveda & Intellectual Property Multi-RAG Intelligence System",
+  "type": "module",
+  "scripts": {
+    "dev": "node run-dev.js",
+    "dev:backend": "node run-python.js run.py",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "node run-python.js -m pytest tests -q",
+    "test:frontend": "cd frontend && npm test",
+    "start": "node run-python.js run.py",
+    "postinstall": "npm install --prefix frontend --include=optional"
+  }
+}

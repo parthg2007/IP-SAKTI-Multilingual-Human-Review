@@ -1,0 +1,44 @@
+﻿# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+.eggs/
+build/
+dist/
+*.pyd
+*.pyo
+
+# ── Virtual environments ─────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+ENV/
+
+# ── Environment / secrets ────────────────────────────────────────────────────
+.env
+.env.local
+.env.production
+backend/.env
+
+# ── Node / Frontend ──────────────────────────────────────────────────────────
+node_modules/
+frontend/node_modules/
+frontend/dist/
+# Built frontend that is copied into backend at deploy time — do NOT commit
+backend/frontend/dist/
+
+# ── IDE ──────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Vector databases (large, built at deploy time) ───────────────────────────
+# Uncomment below to exclude from git (recommended for large files):
+backend/vector.db
+backend/vector_rag2.db

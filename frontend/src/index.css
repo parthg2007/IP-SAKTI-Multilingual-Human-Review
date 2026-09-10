@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.chat-answer > * + * { margin-top: 1rem; }
+.chat-answer :is(h1, h2, h3, h4) { font-weight: 600; line-height: 1.5; }
+.chat-answer :is(h1, h2) { font-size: 1.25em; }
+.chat-answer :is(ul, ol) { padding-left: 1.5rem; }
+.chat-answer ul { list-style-type: disc; }
+.chat-answer ol { list-style-type: decimal; }
+.chat-answer li + li { margin-top: 0.5rem; }
+.chat-answer a { color: var(--lp-accent); text-decoration: underline; text-underline-offset: 3px; }
+.chat-answer blockquote { border-left: 2px solid var(--lp-gold); padding-left: 1rem; }
+.chat-answer pre { overflow-x: auto; padding: 0.75rem; background: var(--lp-surface); border-radius: 0.5rem; }
+.chat-answer code { font-size: 0.85em; }
+.chat-answer hr { border-color: var(--lp-line); }
+.chat-answer table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: .9em; }
+.chat-answer :is(th, td) { padding: .5rem .75rem; border: 1px solid var(--lp-line); text-align: start; }
+.chat-answer th { background: var(--lp-surface); }
+
+@theme {
+  --animate-message-in: message-in 250ms ease-out both;
+  --animate-citation-shimmer: citation-shimmer 1.8s ease-in-out infinite;
+
+  @keyframes message-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes citation-shimmer {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+  }
+}
