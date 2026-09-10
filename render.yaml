@@ -8,7 +8,6 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /api/v1/rag/knowledge/health
-    maxShutdownDelaySeconds: 60
     disk:
       name: ip-sakti-data
       mountPath: /var/data
