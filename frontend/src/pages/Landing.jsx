@@ -105,19 +105,19 @@ export default function Landing() {
 
     if (!root) return
 
-    const ctx = gsap.context(() => {
-      const media = gsap.matchMedia()
+    const media = gsap.matchMedia()
 
-      // ----------------------------------------------------------
-      // NORMAL MOTION
-      // ----------------------------------------------------------
-      media.add('(prefers-reduced-motion: no-preference)', () => {
+    // ----------------------------------------------------------
+    // NORMAL MOTION
+    // ----------------------------------------------------------
+    media.add(
+      '(prefers-reduced-motion: no-preference)',
+      () => {
         // HERO INTRO
         const intro = gsap.timeline({
           defaults: {
             ease: 'power3.out',
             overwrite: 'auto',
-            force3D: true,
           },
         })
 
@@ -127,6 +127,7 @@ export default function Landing() {
             rotate: 2,
             duration: 1,
             stagger: 0.1,
+            force3D: true,
           })
           .from(
             '[data-hero-copy]',
@@ -135,6 +136,7 @@ export default function Landing() {
               y: 16,
               duration: 0.55,
               stagger: 0.08,
+              force3D: true,
             },
             '-=0.55'
           )
@@ -142,7 +144,10 @@ export default function Landing() {
         // --------------------------------------------------------
         // SCROLL REVEALS
         // --------------------------------------------------------
-        const revealElements = gsap.utils.toArray('[data-reveal]')
+        const revealElements = gsap.utils.toArray(
+          '[data-reveal]',
+          root
+        )
 
         revealElements.forEach((element) => {
           gsap.fromTo(
@@ -170,99 +175,130 @@ export default function Landing() {
         })
 
         // --------------------------------------------------------
-        // REFRESH SCROLLTRIGGER AFTER PAGE LAYOUT SETTLES
+        // REFRESH AFTER PAGE LAYOUT SETTLES
         // --------------------------------------------------------
+        let refreshFrame1 = 0
+        let refreshFrame2 = 0
+
         const refreshScrollTriggers = () => {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
+          cancelAnimationFrame(refreshFrame1)
+          cancelAnimationFrame(refreshFrame2)
+
+          refreshFrame1 = requestAnimationFrame(() => {
+            refreshFrame2 = requestAnimationFrame(() => {
               ScrollTrigger.refresh()
             })
           })
         }
 
-        // Initial refresh
         refreshScrollTriggers()
 
-        // Refresh after images/fonts/load event settle
-        window.addEventListener('load', refreshScrollTriggers)
+        window.addEventListener(
+          'load',
+          refreshScrollTriggers,
+          { once: true }
+        )
 
         if (document.fonts?.ready) {
-          document.fonts.ready.then(refreshScrollTriggers)
+          document.fonts.ready.then(refreshScrollTriggers).catch(() => {})
         }
 
         return () => {
-          window.removeEventListener('load', refreshScrollTriggers)
+          cancelAnimationFrame(refreshFrame1)
+          cancelAnimationFrame(refreshFrame2)
+
+          window.removeEventListener(
+            'load',
+            refreshScrollTriggers
+          )
+
+          intro.kill()
         }
-      })
-
-      // ----------------------------------------------------------
-      // DESKTOP MOUSE PARALLAX
-      // ----------------------------------------------------------
-      media.add(
-        '(prefers-reduced-motion: no-preference) and (pointer: fine)',
-        () => {
-          const hero = root.querySelector('[data-hero-visual]')
-          const visual = root.querySelector('[data-parallax]')
-
-          // These elements may not exist depending on the scene
-          if (!hero || !visual) {
-            return undefined
-          }
-
-          const moveX = gsap.quickTo(visual, 'x', {
-            duration: 0.8,
-            ease: 'power2.out',
-            overwrite: 'auto',
-          })
-
-          const moveY = gsap.quickTo(visual, 'y', {
-            duration: 0.8,
-            ease: 'power2.out',
-            overwrite: 'auto',
-          })
-
-          const onMove = (event) => {
-            const bounds = hero.getBoundingClientRect()
-
-            const x =
-              (event.clientX - bounds.left - bounds.width / 2) *
-              0.01
-
-            const y =
-              (event.clientY - bounds.top - bounds.height / 2) *
-              0.01
-
-            moveX(x)
-            moveY(y)
-          }
-
-          const reset = () => {
-            moveX(0)
-            moveY(0)
-          }
-
-          hero.addEventListener('pointermove', onMove, {
-            passive: true,
-          })
-
-          hero.addEventListener('pointerleave', reset)
-
-          return () => {
-            hero.removeEventListener('pointermove', onMove)
-            hero.removeEventListener('pointerleave', reset)
-
-            gsap.killTweensOf(visual)
-          }
-        }
-      )
-
-      return () => {
-        media.revert()
       }
-    }, root)
+    )
+
+    // ----------------------------------------------------------
+    // DESKTOP MOUSE PARALLAX
+    // ----------------------------------------------------------
+    media.add(
+      '(prefers-reduced-motion: no-preference) and (pointer: fine)',
+      () => {
+        const hero = root.querySelector('[data-hero-visual]')
+        const visual = root.querySelector('[data-parallax]')
+
+        if (!hero || !visual) {
+          return undefined
+        }
+
+        const moveX = gsap.quickTo(visual, 'x', {
+          duration: 0.8,
+          ease: 'power2.out',
+        })
+
+        const moveY = gsap.quickTo(visual, 'y', {
+          duration: 0.8,
+          ease: 'power2.out',
+        })
+
+        let bounds = hero.getBoundingClientRect()
+
+        const updateBounds = () => {
+          bounds = hero.getBoundingClientRect()
+        }
+
+        const onMove = (event) => {
+          const x =
+            (event.clientX - bounds.left - bounds.width / 2) *
+            0.01
+
+          const y =
+            (event.clientY - bounds.top - bounds.height / 2) *
+            0.01
+
+          moveX(x)
+          moveY(y)
+        }
+
+        const reset = () => {
+          moveX(0)
+          moveY(0)
+        }
+
+        hero.addEventListener('pointermove', onMove, {
+          passive: true,
+        })
+
+        hero.addEventListener('pointerleave', reset)
+
+        window.addEventListener('resize', updateBounds, {
+          passive: true,
+        })
+
+        return () => {
+          hero.removeEventListener('pointermove', onMove)
+          hero.removeEventListener('pointerleave', reset)
+          window.removeEventListener(
+            'resize',
+            updateBounds
+          )
+
+          gsap.killTweensOf(visual)
+        }
+      }
+    )
 
     return () => {
-      ctx.revert()
+      media.revert()
+      ScrollTrigger.getAll().forEach((trigger) => {
+        const triggerElement = trigger.trigger
+
+        if (
+          triggerElement &&
+          root.contains(triggerElement)
+        ) {
+          trigger.kill()
+        }
+      })
     }
   }, [])
 
@@ -270,9 +306,8 @@ export default function Landing() {
   // TOOLKIT CONTENT ANIMATION
   // ------------------------------------------------------------
   useEffect(() => {
-    const element = pageRef.current?.querySelector(
-      '[data-tool-content]'
-    )
+    const element =
+      pageRef.current?.querySelector('[data-tool-content]')
 
     if (!element) return
 
@@ -358,7 +393,7 @@ export default function Landing() {
             to="/chat"
             className="group inline-flex items-center gap-2 rounded-full border border-[var(--lp-accent)]/50 bg-[#24543C] px-4 py-2 text-xs font-semibold tracking-wide text-white shadow-sm transition-all duration-200 hover:bg-[#32683B] hover:shadow-md dark:bg-[#C1D1AA] dark:text-[#17251A] dark:hover:bg-[#D1DDBC] motion-safe:hover:scale-105"
           >
-            <span className="size-2 rounded-full bg-[var(--lp-gold)] animate-pulse" />
+            <span className="size-2 animate-pulse rounded-full bg-[var(--lp-gold)]" />
             Console
             <Icon
               name="diagonal"
@@ -373,7 +408,10 @@ export default function Landing() {
         </span>
       </header>
 
-      <main id="main-content" className="relative z-0">
+      <main
+        id="main-content"
+        className="relative z-0"
+      >
         <section
           data-hero
           className="relative mx-auto grid max-w-[1400px] grid-cols-1 items-start gap-12 px-6 pt-12 pb-16 sm:gap-16 sm:px-10 sm:pt-16 lg:px-16 lg:pt-20 lg:pb-20"
@@ -389,13 +427,19 @@ export default function Landing() {
 
             <h1 className="font-['Merriweather',serif] text-[clamp(3.25rem,6.6vw,6.1rem)] leading-[1.12] font-normal tracking-[-0.065em]">
               <span className="block overflow-hidden pb-1">
-                <span data-hero-line className="block">
+                <span
+                  data-hero-line
+                  className="block"
+                >
                   Your ideas.
                 </span>
               </span>
 
               <span className="block overflow-hidden pb-1">
-                <span data-hero-line className="block">
+                <span
+                  data-hero-line
+                  className="block"
+                >
                   Your roots.
                 </span>
               </span>
@@ -441,7 +485,10 @@ export default function Landing() {
                 rel="noopener noreferrer"
                 className="inline-flex min-h-14 items-center gap-2.5 rounded-full border border-[var(--lp-line)] px-5 text-sm text-[var(--lp-ink)] transition-colors hover:bg-[var(--lp-card)]"
               >
-                <Icon name="play" className="size-4" />
+                <Icon
+                  name="play"
+                  className="size-4"
+                />
                 Watch walkthrough
               </a>
             </div>
@@ -566,7 +613,10 @@ export default function Landing() {
               </div>
 
               <span className="flex items-center gap-2 text-xs text-[var(--lp-muted)]">
-                <Icon name="spark" className="size-4" />
+                <Icon
+                  name="spark"
+                  className="size-4"
+                />
                 Explore the tools below
               </span>
             </div>
@@ -591,40 +641,65 @@ export default function Landing() {
                       aria-selected={activeTool === index}
                       aria-controls="tool-preview"
                       tabIndex={activeTool === index ? 0 : -1}
-                      onClick={() => setActiveTool(index)}
+                      onClick={() => {
+                        setActiveTool(index)
+                      }}
                       onKeyDown={(event) => {
+                        const allowedKeys = [
+                          'ArrowDown',
+                          'ArrowUp',
+                          'ArrowRight',
+                          'ArrowLeft',
+                          'Home',
+                          'End',
+                        ]
+
                         if (
-                          ![
-                            'ArrowDown',
-                            'ArrowUp',
-                            'ArrowRight',
-                            'ArrowLeft',
-                            'Home',
-                            'End',
-                          ].includes(event.key)
+                          !allowedKeys.includes(
+                            event.key
+                          )
                         ) {
                           return
                         }
 
                         event.preventDefault()
 
-                        const next =
-                          event.key === 'Home'
-                            ? 0
-                            : event.key === 'End'
-                              ? 2
-                              : (index +
-                                  (event.key === 'ArrowDown' ||
-                                  event.key === 'ArrowRight'
-                                    ? 1
-                                    : -1) +
-                                  toolkits.length) %
-                                toolkits.length
+                        let next = index
+
+                        if (event.key === 'Home') {
+                          next = 0
+                        } else if (
+                          event.key === 'End'
+                        ) {
+                          next = toolkits.length - 1
+                        } else if (
+                          event.key === 'ArrowDown' ||
+                          event.key === 'ArrowRight'
+                        ) {
+                          next =
+                            (index + 1) %
+                            toolkits.length
+                        } else if (
+                          event.key === 'ArrowUp' ||
+                          event.key === 'ArrowLeft'
+                        ) {
+                          next =
+                            (index -
+                              1 +
+                              toolkits.length) %
+                            toolkits.length
+                        }
 
                         setActiveTool(next)
-                        document
-                          .getElementById(`tab-${toolkits[next].id}`)
-                          ?.focus()
+
+                        const nextTab =
+                          document.getElementById(
+                            `tab-${toolkits[next].id}`
+                          )
+
+                        if (nextTab) {
+                          nextTab.focus()
+                        }
                       }}
                       className={`group flex w-full cursor-pointer items-center gap-4 rounded-xl border px-5 py-5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lp-accent)] ${
                         activeTool === index
@@ -654,9 +729,12 @@ export default function Landing() {
                 </div>
 
                 <p className="mt-7 flex gap-2 px-5 text-sm leading-relaxed text-[var(--lp-muted)]">
-                  <Icon name="globe" className="size-4" />
-                  Choose India or International when you start a
-                  conversation.
+                  <Icon
+                    name="globe"
+                    className="size-4"
+                  />
+                  Choose India or International when you
+                  start a conversation.
                 </p>
               </div>
 
@@ -681,7 +759,10 @@ export default function Landing() {
                   </span>
                 </div>
 
-                <div data-tool-content key={toolkit.id}>
+                <div
+                  data-tool-content
+                  key={toolkit.id}
+                >
                   <h3 className="font-['Merriweather',serif] text-2xl tracking-[-0.03em]">
                     {toolkit.title}
                   </h3>
@@ -728,7 +809,10 @@ export default function Landing() {
           id="how-it-works"
           className="mx-auto max-w-[1400px] px-6 py-24 sm:px-10 lg:px-16 lg:py-32"
         >
-          <div data-reveal className="text-center">
+          <div
+            data-reveal
+            className="text-center"
+          >
             <p className="mb-5 text-xs tracking-[0.2em] text-[var(--lp-gold)] uppercase">
               03 — From question to understanding
             </p>
@@ -756,7 +840,11 @@ export default function Landing() {
                 'Read the guidance, follow its references, and identify questions for your next step.',
               ],
             ].map(([title, description], index) => (
-              <div data-reveal key={title} className="relative">
+              <div
+                data-reveal
+                key={title}
+                className="relative"
+              >
                 <div className="mb-7 flex items-center gap-5">
                   <span className="font-['Merriweather',serif] text-5xl font-light italic text-[var(--lp-gold)]">
                     0{index + 1}
