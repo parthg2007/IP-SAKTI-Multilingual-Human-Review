@@ -63,36 +63,6 @@ export default function Landing() {
     return () => media.revert()
   }, [])
 
-  // Keep ScrollTrigger's measured positions in sync with content that
-  // finishes loading AFTER the effect above already ran a scrollTrigger
-  // calculation: web fonts, the logo, and anything BotanicalScrollScene
-  // loads. Locally these are already cached by the browser, so layout is
-  // stable the instant GSAP measures it. On a fresh production visit they
-  // load over the network and can take a second or more, so the page
-  // reflows after ScrollTrigger has already recorded "top 91%" for each
-  // [data-reveal] element — which makes reveals fire late or need extra
-  // scrolling. Re-measuring once fonts/images actually finish fixes that.
-  useEffect(() => {
-    const refresh = () => ScrollTrigger.refresh()
-
-    document.fonts?.ready?.then(refresh)
-
-    if (document.readyState === 'complete') {
-      refresh()
-    } else {
-      window.addEventListener('load', refresh)
-    }
-
-    const images = Array.from(pageRef.current?.querySelectorAll('img') ?? [])
-    const pending = images.filter((img) => !img.complete)
-    pending.forEach((img) => img.addEventListener('load', refresh))
-
-    return () => {
-      window.removeEventListener('load', refresh)
-      pending.forEach((img) => img.removeEventListener('load', refresh))
-    }
-  }, [])
-
   useEffect(() => {
     const media = gsap.matchMedia()
     media.add('(prefers-reduced-motion: no-preference)', () => {
@@ -107,7 +77,7 @@ export default function Landing() {
       <a href="#main-content" className="sr-only z-50 rounded-lg bg-[var(--lp-card)] p-3 focus:not-sr-only focus:fixed focus:top-3 focus:left-3">Skip to content</a>
       <header className="relative z-10 mx-auto flex h-24 max-w-[1400px] items-center justify-between gap-6 border-b border-[var(--lp-line)] px-6 pr-20 sm:px-10 sm:pr-24 lg:px-16 lg:pr-28">
         <a href="#" aria-label="IP-SAKTI home" className="flex items-center gap-2.5">
-          <img src={logo} alt="" fetchPriority="high" className="size-10 rounded-full bg-[#F7F4ED] object-contain p-0.5" />
+          <img src={logo} alt="" className="size-10 rounded-full bg-[#F7F4ED] object-contain p-0.5" />
           <span className="font-['Merriweather',serif] text-xl font-bold tracking-[-0.04em]">IP-SAKTI<span className="text-[var(--lp-gold)]">.</span></span>
         </a>
         <nav aria-label="Main navigation" className="hidden items-center gap-6 text-sm text-[var(--lp-muted)] md:flex">
@@ -138,7 +108,7 @@ export default function Landing() {
             <p data-hero-copy className="mx-auto mt-5 max-w-[560px] font-['Source_Sans_3',sans-serif] text-lg leading-relaxed text-[var(--lp-muted)] sm:text-xl">Your AI research companion for Ayurveda’s intellectual property and regulations. Ask with confidence. Explore with context.</p>
             <div data-hero-copy className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Link to="/chat" className="group inline-flex min-h-14 items-center gap-7 rounded-full bg-[#24543C] px-6 text-sm font-medium text-white transition-[background-color,transform] hover:bg-[#32683B] motion-safe:hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--lp-accent)] dark:bg-[#C1D1AA] dark:text-[#17251A] dark:hover:bg-[#D1DDBC]">Start a conversation<Icon name="diagonal" className="transition-transform motion-safe:group-hover:translate-x-0.5 motion-safe:group-hover:-translate-y-0.5" /></Link>
-              <button type="button" aria-disabled="true" title="Walkthrough coming soon" className="inline-flex min-h-14 cursor-default items-center gap-2.5 rounded-full border border-[var(--lp-line)] px-5 text-sm text-[var(--lp-ink)]"><Icon name="play" className="size-4" />Watch walkthrough<span className="ml-1 text-xs text-[var(--lp-muted)]">Soon</span></button>
+              <a href="https://drive.google.com/file/d/1U2kTTLO3JBzJeYy2bjDIGslqulwMyJdd/view?usp=drivesdk" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-14 items-center gap-2.5 rounded-full border border-[var(--lp-line)] px-5 text-sm text-[var(--lp-ink)] transition-colors hover:bg-[var(--lp-card)]"><Icon name="play" className="size-4" />Watch walkthrough</a>
             </div>
             <p data-hero-copy className="mt-6 flex items-center justify-center gap-2 font-['Source_Sans_3',sans-serif] text-sm text-[var(--lp-muted)]"><Icon name="shield" className="size-4 text-[var(--lp-accent)]" />Built for thoughtful, source-grounded exploration.</p>
           </div>
