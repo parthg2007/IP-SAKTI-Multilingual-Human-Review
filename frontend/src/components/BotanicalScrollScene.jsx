@@ -66,11 +66,28 @@ export default function BotanicalScrollScene() {
         },
       })
       render()
+
+      // The frame sequence flips data-ready on these canvases once it has
+      // something to paint (see the data-[ready=true]:opacity-100 classes
+      // below). Locally that happens almost immediately; in production it
+      // can lag well behind mount while frames download. Re-run refresh
+      // when readiness actually changes instead of assuming one rAF after
+      // mount was enough — this is a safety net for anything downstream
+      // whose position depends on this scene's final layout, on top of the
+      // single rAF refresh below that already covers the pin spacer itself.
+      const refreshOnReady = () => ScrollTrigger.refresh()
+      const readyObserver = new MutationObserver(refreshOnReady)
+      readyObserver.observe(canvasRef.current, { attributes: true, attributeFilter: ['data-ready'] })
+      if (backgroundRef.current) {
+        readyObserver.observe(backgroundRef.current, { attributes: true, attributeFilter: ['data-ready'] })
+      }
+
       // The pin adds space before the landing page's section reveal triggers.
       const refresh = requestAnimationFrame(() => ScrollTrigger.refresh())
 
       return () => {
         cancelAnimationFrame(refresh)
+        readyObserver.disconnect()
         animation.scrollTrigger?.kill()
         animation.kill()
         sequence.dispose()
